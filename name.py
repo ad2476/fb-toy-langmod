@@ -10,13 +10,13 @@ import string
 
 MAX_LENGTH = 20
 
-def parseProgramArgs():
-  parser = argparse.ArgumentParser(description="Your very own bigram-arun!")
+def parseProgramArgs(name):
+  parser = argparse.ArgumentParser(description="Your very own bigram-%s!"%name)
   parser.add_argument("corpus", help="Path to training corpus")
   parser.add_argument("-m", "--model", help="pre-trained model")
   parser.add_argument("-s", "--save", help="Save the model to a file")
 
-  return parser.parse_args(), parser.prog
+  return parser.parse_args()
 
 def pickFirstWord(model, prev):
   first = ""
@@ -42,7 +42,7 @@ def genSentence(model, lastWord=None):
     for pair in model.getBigramSet():
       x,x_ = pair
       if x == word: # only get the words following this one
-        theta = model._thetaFunction((word,x_))*(0.6*np.random.randn()+1.0) # put in some noise
+        theta = model._thetaFunction((word,x_))*(0.5*np.random.randn()+1.0) # put in some noise
         maxtheta, _ = best
         if theta >= maxtheta:
           best = (theta,x_)
@@ -54,8 +54,8 @@ def genSentence(model, lastWord=None):
 
 if __name__ == '__main__':
 
-  args, name = parseProgramArgs()
-  name,_ = os.path.splitext(name)
+  name = os.path.normpath(os.path.splitext(sys.argv[0])[0])
+  args = parseProgramArgs(name)
 
   sys.stdout.write("Loading files...")
   sys.stdout.flush()
