@@ -1,0 +1,6 @@
+hello
+these are some sample lines of chat
+this will not be enough
+to train a good langmod on
+but this should be the format of your data
+the structure of the data determines the structure of the program
