@@ -25,7 +25,7 @@ def pickFirstWord(model, prev):
   for pair in bigrams:
     w,w_ = pair
     if w == prev:
-      if np.random.random() < 0.7:
+      if np.random.random() < 0.4:
         first = w_
   if first == "": # this hopefully won't infinite loop...
     return pickFirstWord(model, model.STOP)
@@ -42,7 +42,7 @@ def genSentence(model, lastWord=None):
     for pair in model.getBigramSet():
       x,x_ = pair
       if x == word: # only get the words following this one
-        theta = model._thetaFunction((word,x_))*(0.5*np.random.randn()+1.0) # put in some noise
+        theta = model._thetaFunction((word,x_))*(0.4*np.random.randn()+1.0) # put in some noise
         maxtheta, _ = best
         if theta >= maxtheta:
           best = (theta,x_)
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     sys.stdout.write("\nTraining language model...")
     sys.stdout.flush()
     model = bigram.BigramLangmod(train, [])
-    model.train((1.2,200.0)) # train model with these smoothing params
+    model.train((2.2,100.0)) # train model with these smoothing params
 
     if args.save:
       with open(args.save, "wb") as output:
@@ -87,6 +87,6 @@ if __name__ == '__main__':
         #res = reduce(lambda x,y: x+" "+y if "'" not in y and y not in string.punctuation else x+y, s)
         res = "".join([i+" " for i in s]).strip()
         sys.stdout.write("\b\b\b"+res+" ")
-      raw_input()
+        raw_input()
     except EOFError:
       break
