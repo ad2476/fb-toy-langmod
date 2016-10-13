@@ -32,7 +32,7 @@ class EmissionSequenceGenerator:
       for label,y_ in label_hash.iteritems(): # use hashed label indexing sigma
         p = sigma_slice[y_] # transition probability
         if p > sigma_thresh: # this y_ follows y
-          p *= self._noise(0.4,1.0) # add some noise
+          p *= self._noise(0.1,1.0) # add some noise
           maxp, _ = best
           if p >= maxp:
             best = (p,label)
