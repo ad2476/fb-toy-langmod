@@ -8,7 +8,7 @@ import cPickle
 import numpy as np
 import string
 
-MAX_LENGTH = 20
+MAX_LENGTH = 10
 
 def parseProgramArgs(name):
   parser = argparse.ArgumentParser(description="Your very own bigram-%s!"%name)
@@ -33,21 +33,24 @@ def pickFirstWord(model, prev):
   return first
 
 def genSentence(model, lastWord=None):
-  word = pickFirstWord(model, (lastWord or model.STOP))
+  words = list(model.getWordSet())
+  #word = pickFirstWord(model, (lastWord or model.STOP))
+  word = model.STOP
   sentence = []
   i = 0
-  while (i<MAX_LENGTH) and (word!=model.STOP):
-    sentence.append(word)
+  transitions = np.zeros(len(words))
+  while (i<MAX_LENGTH):
+    #sentence.append(word)
     best = (float("-inf"), "") # (max theta_{x,x'}, argmax theta_{x,x'})
-    for pair in model.getBigramSet():
-      x,x_ = pair
-      if x == word: # only get the words following this one
-        theta = model._thetaFunction((word,x_))*(0.4*np.random.randn()+1.0) # put in some noise
-        maxtheta, _ = best
-        if theta >= maxtheta:
-          best = (theta,x_)
 
-    _, word = best
+    for j,x_ in enumerate(words): # iterate over possible next words
+      pair = word,x_
+      transitions[j] = np.e**model._thetaFunction(pair)
+
+    transitions /= transitions.sum() # normalise
+    word = np.random.choice(words, p=transitions) # random sample next word from transitions
+    if word == model.STOP: break
+    sentence.append(word)
     i+=1
 
   return sentence
