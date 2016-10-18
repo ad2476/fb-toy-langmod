@@ -26,13 +26,13 @@ The Hidden Markov Model trains on labeled text, so you will have to first create
 
 1. Using `build_corpus.py`, construct your unlabeled corpus as above
 2. Run `python` at the interpreter:
-    ```
-    >>> import build_corpus
-    >>> with open("out.txt","r") as f:
-    >>>   text = [l for l in f]
-    >>> corpus = build_corpus.cleanTextCorpus(text)
-    >>> build_corpus.tagCorpus(corpus,"data/<name>.txt")
-    ```
+```python
+>>> import build_corpus
+>>> with open("out.txt","r") as f:
+>>>   text = [l for l in f]
+>>> corpus = build_corpus.cleanTextCorpus(text)
+>>> build_corpus.tagCorpus(corpus,"data/<name>.txt")
+```
 3. Your POS-tagged corpus will be where you saved it
 
 ## Running the generator:
