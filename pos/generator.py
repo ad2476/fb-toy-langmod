@@ -9,7 +9,7 @@ class EmissionSequenceGenerator:
       hmm: a hidden markov model trained on the corpus
   """
   def __init__(self, words, hmm, langmod):
-    self._words = words
+    self._words = list(words)
     self._hmm = hmm
     self._langmod = langmod
 
@@ -22,37 +22,24 @@ class EmissionSequenceGenerator:
     sigma, tau = self._hmm.getDistribution()
     sentence = [] # output sentence
     word = STOP # usually the prev word when important
-    y = self._selectFirstLabel()
+    y = label_hash[STOP]
 
     i = 0
-    while (i<=length_cap) and (y != STOP):
-      best = (0.0,STOP) # first, we find y'
+    emissions = np.zeros(len(self._words)) # only allocate this space once
+    while i<=length_cap:
       sigma_thresh = self._hmm.sigmaSmoothFactorUnk(y)
-      sigma_slice = sigma[label_hash[y], :] # slice for labels following y
-      for label,y_ in label_hash.iteritems(): # use hashed label indexing sigma
-        p = sigma_slice[y_] # transition probability
-        if p > sigma_thresh: # this y_ follows y
-          p *= self._noise(0.1,1.0) # add some noise
-          maxp, _ = best
-          if p >= maxp:
-            best = (p,label)
+      sigma_slice = sigma[y, :] # slice for labels following y
+      y = np.random.choice(sigma_slice.size, p=sigma_slice) # random sample y from sigma
 
-      _, y = best
-      best = (0.0,"") # now, find x | y
-      for w in self._words: # maximise tau_{y,w}
-        pair = (label_hash[y],hash(w))
-        if pair in tau: # this word follows y
-          n = self._noise(0.3,0.55) # add some noise
-          theta = self._langmod._thetaFunction((word,w))*n
-          p = theta + (1.0-n)*tau[pair]
-          maxp,_ = best
-          if p >= maxp:
-            best = (p,w)
-      
-      _, word = best # update word
-      if not word:
-        continue # try again
-      
+      for j,w in enumerate(self._words): # maximise tau_{y,w}
+        pair = (y,hash(w))
+        emissions[j] = tau[pair]
+
+      emissions /= emissions.sum() # normalise
+      word = np.random.choice(self._words, p=emissions) # random sample word from tau, given y
+
+      if word == STOP:
+        break
       sentence.append(word)
       i += 1
 
