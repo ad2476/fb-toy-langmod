@@ -3,10 +3,11 @@
 import argparse
 import os
 import sys
-import bigram
 import cPickle
 import numpy as np
 import string
+
+from langmod import bigram
 
 MAX_LENGTH = 10
 

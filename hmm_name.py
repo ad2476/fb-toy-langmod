@@ -3,7 +3,7 @@
 import argparse
 import os
 import sys
-import bigram
+from langmod import bigram
 import numpy as np
 import string
 
