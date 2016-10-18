@@ -1,5 +1,5 @@
 # fb-toy-langmod
-Just a toy langmod to train off downloaded fb message data
+Just a toy langmod to train off downloaded fb message data. As a small hobby project, expect this to break. Often. Actually, expect nothing and then you can't be disappointed!
 
 ## Requirements:
 
@@ -7,6 +7,9 @@ Requires:
 * lxml for Python 3
 * nltk for Python 3
 * Numpy for Python 2 and/or 3
+* Tensorflow for Python 3 (Optional)
+
+Tensorflow is required if you're using the feedforward neural network in `nn_name.py` as your model.
 
 Unfortunately it's a bit of a clusterfuck between Python 2 and 3.
 Blame poor planning combined with laziness. ¯\\\_(ツ)\_/¯
@@ -37,9 +40,11 @@ The Hidden Markov Model trains on labeled text, so you will have to first create
 
 ## Running the generator:
 
-Run the bigram-based generator: `name.py [-h] [-m MODEL] [-s SAVE] corpus`
+Run the Markov-based generator: `usage: bgm_name.py [-h] [-m MODEL] [-s SAVE] corpus`
 
 Run the HMM-based generator: `usage: hmm_name.py [-h] corpus`. This unfortunately cannot save/load its model as lambdas are not pickle-able.
+
+Run the Feedforward NN-based generator: `usage: nn_name.py [-h] [-l LOAD | -s SAVE] corpus`. I'd highly recommend saving the model as training can take a while. It's not worth waiting 30 minutes every time in order read some gibberish that approximates your chats.
 
 ## (Actual) sample output:
 
