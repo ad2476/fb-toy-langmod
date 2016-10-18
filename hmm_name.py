@@ -54,8 +54,8 @@ if __name__ == '__main__':
       sys.stdout.flush()
       s = gen.generateSentence(MAX_LENGTH)
       if s:
-        res = reduce(lambda x,y: x+" "+y if "'" not in y and y not in string.punctuation else x+y, s)
-        #res = "".join([i+" " for i in s]).strip()
+        #res = reduce(lambda x,y: x+" "+y if "'" not in y and y not in string.punctuation else x+y, s)
+        res = "".join([i+" " for i in s]).strip()
         sys.stdout.write("\b\b\b"+res+" ")
         raw_input()
       else:
