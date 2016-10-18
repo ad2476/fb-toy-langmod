@@ -34,13 +34,11 @@ def pickFirstWord(model, prev):
 
 def genSentence(model, lastWord=None):
   words = list(model.getWordSet())
-  #word = pickFirstWord(model, (lastWord or model.STOP))
   word = model.STOP
   sentence = []
   i = 0
   transitions = np.zeros(len(words))
   while (i<MAX_LENGTH):
-    #sentence.append(word)
     best = (float("-inf"), "") # (max theta_{x,x'}, argmax theta_{x,x'})
 
     for j,x_ in enumerate(words): # iterate over possible next words
